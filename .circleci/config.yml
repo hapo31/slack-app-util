@@ -1,0 +1,29 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10.15.3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: npm install
+      - run: npm run build
+      - run:
+          name: Deploy to repository
+          command: |
+            git checkout for-heroku
+            git config user.email "happou31+circleci@users.noreply.github.com"
+            git config user.name "happou31+circleci"
+            git add dist/index.js
+            git commit -m "built from https://github.com/happou31/slack-app-util/commit/$CIRCLE_SHA1"
+            git push origin for-heroku
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
