@@ -22,6 +22,7 @@ app.post("/post/image", async (req, res, next) => {
   const title: string | undefined = req.query.title;
 
   if (url) {
+    const date = new Date();
     const imageUrl = decodeURIComponent(url);
 
     const postData = {
@@ -34,7 +35,7 @@ app.post("/post/image", async (req, res, next) => {
               title: title ? decodeURIComponent(title) : "image"
             }
           ],
-          image_url: imageUrl
+          image_url: `${imageUrl}?d=${date.getTime()}`
         }
       ]
     };
