@@ -13,6 +13,10 @@ const server = app.listen(port, () => {
   console.log(`listen to port:${port}`);
 });
 
+app.get("/", (req, res) => {
+  res.send("app work!");
+});
+
 app.post("/post/image", async (req, res, next) => {
   const url: string | undefined = req.query.url;
   const title: string | undefined = req.query.title;
